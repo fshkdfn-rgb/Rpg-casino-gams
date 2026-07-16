@@ -23,7 +23,6 @@
             overflow-x: hidden;
         }
 
-        /* ===== ФОН ===== */
         body::before {
             content: '';
             position: fixed;
@@ -80,7 +79,6 @@
             border: 1px solid rgba(38, 50, 63, 0.6);
         }
 
-        /* ===== АВАТАР ===== */
         .avatar-section {
             display: flex;
             align-items: center;
@@ -132,7 +130,6 @@
             border: 1px solid rgba(245, 179, 66, 0.2);
         }
 
-        /* ===== СТАТИСТИКА ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -165,7 +162,6 @@
             color: #5b9bd5;
         }
 
-        /* ===== ОПЫТ ===== */
         .exp-section {
             background: rgba(26, 38, 50, 0.6);
             border-radius: 16px;
@@ -203,7 +199,6 @@
             width: 0%;
         }
 
-        /* ===== ВКЛАДКИ ===== */
         .tab-bar {
             display: flex;
             gap: 4px;
@@ -247,7 +242,6 @@
             display: block;
         }
 
-        /* ===== РАБОТА ===== */
         .job-card {
             background: rgba(26, 38, 50, 0.6);
             border-radius: 18px;
@@ -289,7 +283,6 @@
             margin-left: 10px;
         }
 
-        /* ===== КНОПКИ ===== */
         .btn {
             border: none;
             border-radius: 14px;
@@ -329,10 +322,6 @@
             padding: 5px 14px;
             font-size: 12px;
         }
-        .btn-gold {
-            background: #f5b342;
-            color: #0b0e14;
-        }
 
         .reset-section {
             margin-top: 16px;
@@ -341,7 +330,6 @@
             text-align: center;
         }
 
-        /* ===== МАГАЗИН ===== */
         .shop-tabs {
             display: flex;
             gap: 4px;
@@ -410,7 +398,6 @@
             font-weight: 600;
         }
 
-        /* ===== СЛОТ ===== */
         .slot-machine {
             background: rgba(15, 23, 32, 0.8);
             border-radius: 24px;
@@ -498,14 +485,12 @@
             border: 1px solid rgba(26, 38, 50, 0.4);
         }
 
-        /* ===== НАВЫКИ ===== */
         .skills-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
 
-        /* ===== КОНФЕТТИ ===== */
         .confetti-container {
             position: fixed;
             top: 0;
@@ -528,7 +513,6 @@
             100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
         }
 
-        /* ===== УВЕДОМЛЕНИЯ ===== */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -551,7 +535,6 @@
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
-        /* ===== АДАПТАЦИЯ ===== */
         @media (max-width: 440px) {
             .reel { width: 64px; height: 78px; font-size: 38px; }
             .shop-grid { grid-template-columns: 1fr 1fr; }
@@ -574,7 +557,6 @@
 
 <div class="app" id="app">
 
-    <!-- АВАТАР -->
     <div class="avatar-section">
         <div class="avatar" id="avatarEmoji">🧑‍💼</div>
         <div class="avatar-info">
@@ -587,7 +569,6 @@
         </div>
     </div>
 
-    <!-- СТАТИСТИКА -->
     <div class="stats-grid">
         <div class="stat-box">
             <div class="label">💰 Баланс</div>
@@ -603,7 +584,6 @@
         </div>
     </div>
 
-    <!-- ОПЫТ -->
     <div class="exp-section">
         <div class="exp-row">
             <span class="exp-label">⭐ Опыт</span>
@@ -614,7 +594,6 @@
         </div>
     </div>
 
-    <!-- ВКЛАДКИ -->
     <div class="tab-bar">
         <button class="tab-btn active" data-tab="work">💼 Работа</button>
         <button class="tab-btn" data-tab="shop">🛒 Магазин</button>
@@ -622,7 +601,6 @@
         <button class="tab-btn" data-tab="skills">⚡ Навыки</button>
     </div>
 
-    <!-- РАБОТА -->
     <div class="tab-content active" id="tab-work">
         <div id="jobList"></div>
         <div style="text-align:center;font-size:12px;color:#7e96ab;margin-top:6px;">
@@ -635,7 +613,6 @@
         </div>
     </div>
 
-    <!-- МАГАЗИН -->
     <div class="tab-content" id="tab-shop">
         <div class="shop-tabs">
             <button class="shop-tab active" data-shop="clothes">👔 Одежда</button>
@@ -645,7 +622,6 @@
         <div class="shop-grid" id="shopGrid"></div>
     </div>
 
-    <!-- СЛОТ -->
     <div class="tab-content" id="tab-slot">
         <div class="slot-machine">
             <div class="reels">
@@ -666,7 +642,6 @@
         <div class="history-box" id="historyBox">📜 История: пока пусто</div>
     </div>
 
-    <!-- НАВЫКИ -->
     <div class="tab-content" id="tab-skills">
         <div class="skills-grid" id="skillsGrid"></div>
         <div style="text-align:center;font-size:12px;color:#7e96ab;margin-top:10px;">
@@ -836,7 +811,6 @@
     function resetGame() {
         if (!confirm('⚠️ ВЫ УВЕРЕНЫ? Весь прогресс будет потерян!')) return;
 
-        // Сбрасываем всё состояние
         G.balance = 30;
         G.totalEarned = 0;
         G.jobId = 0;
@@ -854,7 +828,6 @@
         G.ownedItems = [];
         G.skillLevels = { workSpeed: 0, slotLuck: 0, slotBonus: 0, saveMoney: 0 };
 
-        // Очищаем сохранение
         localStorage.removeItem('idleLifeRPG');
 
         updateUI();
@@ -898,7 +871,6 @@
             const canAccess = canAccessJob(job);
             const isFirstJob = idx === 0;
 
-            // Проверяем, можно ли купить
             let canBuy = false;
             if (!isCurrent && idx !== 0) {
                 if (canAccess && G.balance >= getFinalCost(job.cost)) {
@@ -906,7 +878,6 @@
                 }
             }
 
-            // Текст требований
             let reqText = '';
             if (isCurrent) {
                 reqText = '✅ Текущая работа';
@@ -1059,7 +1030,33 @@
         G.ownedItems.push(id);
         save();
         updateUI();
+
+        // ============================================================
+        //  ⚡ ГЛАВНОЕ: ПРОВЕРЯЕМ ДОСТУПНЫЕ РАБОТЫ ПОСЛЕ ПОКУПКИ
+        // ============================================================
+        // Проверяем, не появилась ли новая доступная работа
+        let newJobAvailable = false;
+        let newJobName = '';
+        for (const job of jobs) {
+            if (job.id !== G.jobId && canAccessJob(job)) {
+                newJobAvailable = true;
+                newJobName = job.name;
+                break;
+            }
+        }
+
         notify(`✅ Куплено: ${item.name}!`);
+
+        if (newJobAvailable) {
+            setTimeout(() => {
+                notify(`🎉 Теперь доступна работа: ${newJobName}!`, true);
+                // Автоматически переключаем на новую работу?
+                // Не переключаем автоматически, чтобы игрок сам выбрал
+            }, 500);
+        }
+
+        renderJobs();
+        save();
     }
 
     function buySkill(id) {
@@ -1138,7 +1135,6 @@
     function finishSpin(results, reels, bet) {
         let win = 0;
 
-        // Только реальные выигрышные комбинации (без x1)
         if (results[0] === results[1] && results[1] === results[2]) {
             win = winMap[results[0]] || 0;
         }
@@ -1148,7 +1144,6 @@
         if (results.filter(s => s === '🎰').length === 2) {
             win = Math.max(win, 20);
         }
-        // Два одинаковых — дают небольшой бонус (но это не x1)
         if (results[0] === results[1] && results[0] !== results[2]) {
             win = Math.max(win, 2);
         }
@@ -1156,16 +1151,13 @@
             win = Math.max(win, 2);
         }
 
-        // Убираем x1 победы: если выигрыш меньше ставки × 1.5 — считаем проигрышем
+        // Убираем x1 победы
         if (win > 0 && win < bet * 1.5) {
             win = 0;
         }
 
-        // Бонус от навыка
         const bonusLvl = G.skillLevels.slotBonus || 0;
         win = Math.floor(win * (1 + bonusLvl * 0.1));
-
-        // Умножаем на ставку
         win = Math.floor(win * (bet / 2));
 
         if (win > 0) {
@@ -1185,7 +1177,6 @@
             document.getElementById('slotMessage').textContent = '😔 Проигрыш';
         }
 
-        // Опыт за спин
         addExp(Math.floor(bet * 0.3) + 1);
 
         const display = results.join('');
