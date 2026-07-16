@@ -73,6 +73,7 @@
             margin-bottom: 20px;
             font-weight: 900;
         }
+        /* ===== АВТОРИЗАЦИЯ (только вход) ===== */
         .auth-container {
             display: flex;
             gap: 15px;
@@ -92,13 +93,13 @@
             color: white;
             font-size: 16px;
             outline: none;
-            min-width: 180px;
+            min-width: 200px;
         }
         .auth-container input::placeholder { color: #888; }
         .auth-container button {
             background: #ffd700;
             border: none;
-            padding: 12px 30px;
+            padding: 12px 40px;
             border-radius: 10px;
             font-weight: bold;
             font-size: 16px;
@@ -351,8 +352,8 @@
             .bet-control button { width: 35px; height: 35px; font-size: 20px; }
             .bet-control span { font-size: 20px; min-width: 60px; }
             .reels { gap: 10px; }
-            .auth-container input { min-width: 140px; font-size: 14px; padding: 10px 15px; }
-            .auth-container button { padding: 10px 20px; font-size: 14px; }
+            .auth-container input { min-width: 150px; font-size: 14px; padding: 10px 15px; }
+            .auth-container button { padding: 10px 30px; font-size: 14px; }
         }
         @media (max-width: 450px) {
             .reel-wrapper { width: 70px; height: 95px; }
@@ -377,19 +378,13 @@
 
     <div class="main-container">
 
-        <!-- АВТОРИЗАЦИЯ -->
+        <!-- АВТОРИЗАЦИЯ (ТОЛЬКО ВХОД) -->
         <div class="casino">
             <div id="authSection">
                 <div class="auth-container">
-                    <input type="text" id="regUsername" placeholder="👤 Имя пользователя" maxlength="20">
-                    <input type="email" id="regEmail" placeholder="📧 Email">
-                    <input type="password" id="regPassword" placeholder="🔒 Пароль (мин. 6 символов)">
-                    <button id="registerBtn">📝 Регистрация</button>
-                </div>
-                <div class="auth-container">
                     <input type="email" id="loginEmail" placeholder="📧 Email">
                     <input type="password" id="loginPassword" placeholder="🔒 Пароль">
-                    <button id="loginBtn">🔑 Вход</button>
+                    <button id="loginBtn">🔑 Войти</button>
                 </div>
             </div>
             <div id="userInfo" style="display: none;">
@@ -442,13 +437,12 @@
 
     <script>
         // ============================================
-        //  ПОДКЛЮЧЕНИЕ К SUPABASE (ТОЛЬКО ОДИН РАЗ!)
+        //  ПОДКЛЮЧЕНИЕ К SUPABASE
         // ============================================
         
         const SUPABASE_URL = 'https://bxjuvzyxspcavnpcfytj.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_qsUmLkXOfCa6359Ywg5sUQ-_MOTJ_';
         
-        // СОЗДАЁМ КЛИЕНТ ТОЛЬКО ОДИН РАЗ
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         // ============================================
@@ -496,64 +490,8 @@
         }
 
         // ============================================
-        //  АВТОРИЗАЦИЯ (используем supabaseClient)
+        //  АВТОРИЗАЦИЯ (ТОЛЬКО ВХОД)
         // ============================================
-        
-        async function register() {
-            console.log('🔄 Регистрация начата...');
-            
-            const username = document.getElementById('regUsername').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value.trim();
-            
-            if (!username || !email || !password) {
-                alert('⚠️ Заполните все поля!');
-                return;
-            }
-            if (password.length < 6) {
-                alert('⚠️ Пароль должен быть не менее 6 символов!');
-                return;
-            }
-            
-            try {
-                console.log('📝 Создаём пользователя...');
-                const { data: authData, error: authError } = await supabaseClient.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: { data: { username: username } }
-                });
-                
-                if (authError) throw authError;
-                
-                console.log('✅ Пользователь создан в Auth');
-                
-                if (authData.user) {
-                    console.log('💾 Сохраняем в таблицу users...');
-                    const { error: userError } = await supabaseClient
-                        .from('users')
-                        .insert([{
-                            id: authData.user.id,
-                            username: username,
-                            email: email,
-                            balance: 1000,
-                            total_spins: 0,
-                            total_wins: 0,
-                            total_losses: 0
-                        }]);
-                    
-                    if (userError) throw userError;
-                    
-                    console.log('✅ Данные сохранены!');
-                    alert('✅ Регистрация успешна! Теперь войдите в аккаунт.');
-                    document.getElementById('regUsername').value = '';
-                    document.getElementById('regEmail').value = '';
-                    document.getElementById('regPassword').value = '';
-                }
-            } catch (error) {
-                console.error('❌ Ошибка:', error);
-                alert('❌ Ошибка регистрации: ' + error.message);
-            }
-        }
         
         async function login() {
             console.log('🔄 Вход начат...');
@@ -896,7 +834,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🔗 Привязка кнопок...');
             
-            document.getElementById('registerBtn').addEventListener('click', register);
             document.getElementById('loginBtn').addEventListener('click', login);
             document.getElementById('logoutBtn').addEventListener('click', logout);
             document.getElementById('spinBtn').addEventListener('click', spin);
