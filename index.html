@@ -322,6 +322,18 @@
             padding: 5px 14px;
             font-size: 12px;
         }
+        .btn-auto {
+            background: #2d9cdb;
+            color: #fff;
+        }
+        .btn-auto:hover:not(:disabled) {
+            transform: scale(1.03);
+            box-shadow: 0 4px 20px rgba(45, 156, 219, 0.3);
+        }
+        .btn-auto:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
 
         .reset-section {
             margin-top: 16px;
@@ -604,7 +616,7 @@
     <div class="tab-content active" id="tab-work">
         <div id="jobList"></div>
         <div style="text-align:center;font-size:12px;color:#7e96ab;margin-top:6px;">
-            💡 Для новой работы нужны: уровень, деньги и вещи
+            💡 Автоматическое повышение при выполнении всех условий
         </div>
         <div class="reset-section">
             <button class="btn btn-danger" onclick="resetGame()" style="padding:10px 30px;font-size:14px;">
@@ -618,6 +630,7 @@
             <button class="shop-tab active" data-shop="clothes">👔 Одежда</button>
             <button class="shop-tab" data-shop="cars">🚗 Авто</button>
             <button class="shop-tab" data-shop="houses">🏠 Жильё</button>
+            <button class="shop-tab" data-shop="electronics">💻 Техника</button>
         </div>
         <div class="shop-grid" id="shopGrid"></div>
     </div>
@@ -666,10 +679,13 @@
         { id: 4, name: 'Курьер', baseIncome: 7, cost: 280, reqLevel: 4, reqItems: ['clothes_3', 'car_1'] },
         { id: 5, name: 'Продавец', baseIncome: 12, cost: 550, reqLevel: 5, reqItems: ['clothes_3', 'car_1', 'house_1'] },
         { id: 6, name: 'Водитель', baseIncome: 20, cost: 1100, reqLevel: 6, reqItems: ['clothes_4', 'car_2'] },
-        { id: 7, name: 'Менеджер', baseIncome: 35, cost: 2300, reqLevel: 7, reqItems: ['clothes_4', 'car_2', 'house_2'] },
-        { id: 8, name: 'Директор', baseIncome: 60, cost: 4800, reqLevel: 8, reqItems: ['clothes_5', 'car_3', 'house_2'] },
-        { id: 9, name: 'Магнат', baseIncome: 110, cost: 11000, reqLevel: 9, reqItems: ['clothes_5', 'car_3', 'house_3'] },
-        { id: 10, name: 'Легенда', baseIncome: 220, cost: 28000, reqLevel: 10, reqItems: ['clothes_6', 'car_4', 'house_3'] }
+        { id: 7, name: 'Менеджер', baseIncome: 35, cost: 2300, reqLevel: 7, reqItems: ['clothes_4', 'car_2', 'house_2', 'electronics_1'] },
+        { id: 8, name: 'Директор', baseIncome: 60, cost: 4800, reqLevel: 8, reqItems: ['clothes_5', 'car_3', 'house_2', 'electronics_2'] },
+        { id: 9, name: 'Магнат', baseIncome: 110, cost: 11000, reqLevel: 9, reqItems: ['clothes_5', 'car_3', 'house_3', 'electronics_2'] },
+        { id: 10, name: 'Легенда', baseIncome: 220, cost: 28000, reqLevel: 10, reqItems: ['clothes_6', 'car_4', 'house_3', 'electronics_3'] },
+        { id: 11, name: 'Икона', baseIncome: 450, cost: 70000, reqLevel: 12, reqItems: ['clothes_6', 'car_4', 'house_4', 'electronics_3'] },
+        { id: 12, name: 'Миллиардер', baseIncome: 900, cost: 180000, reqLevel: 14, reqItems: ['clothes_7', 'car_5', 'house_4', 'electronics_4'] },
+        { id: 13, name: 'Легенда мира', baseIncome: 1800, cost: 450000, reqLevel: 16, reqItems: ['clothes_7', 'car_5', 'house_5', 'electronics_4'] }
     ];
 
     const shopItems = {
@@ -679,19 +695,28 @@
             { id: 'clothes_3', name: 'Костюм', icon: '🤵', cost: 120, desc: 'Деловой стиль' },
             { id: 'clothes_4', name: 'Дорогой костюм', icon: '👔', cost: 350, desc: 'Статусный вид' },
             { id: 'clothes_5', name: 'Брендовый костюм', icon: '👔', cost: 900, desc: 'Премиум класс' },
-            { id: 'clothes_6', name: 'Элитный костюм', icon: '👔', cost: 2500, desc: 'Высший свет' }
+            { id: 'clothes_6', name: 'Элитный костюм', icon: '👔', cost: 2500, desc: 'Высший свет' },
+            { id: 'clothes_7', name: 'Эксклюзивный костюм', icon: '👔', cost: 6500, desc: 'Уровень миллиардера' }
         ],
         cars: [
             { id: 'car_1', name: 'Велосипед', icon: '🚲', cost: 50, desc: 'Быстрее пешком' },
             { id: 'car_2', name: 'Б/у авто', icon: '🚗', cost: 200, desc: 'Средство передвижения' },
             { id: 'car_3', name: 'Новое авто', icon: '🚗', cost: 700, desc: 'Комфорт и стиль' },
-            { id: 'car_4', name: 'Спорткар', icon: '🏎️', cost: 2000, desc: 'Для настоящих магнатов' }
+            { id: 'car_4', name: 'Спорткар', icon: '🏎️', cost: 2000, desc: 'Для настоящих магнатов' },
+            { id: 'car_5', name: 'Суперкар', icon: '🏎️', cost: 6000, desc: 'Мечта миллиардера' }
         ],
         houses: [
             { id: 'house_1', name: 'Комната', icon: '🏠', cost: 80, desc: 'Свой угол' },
             { id: 'house_2', name: 'Квартира', icon: '🏢', cost: 350, desc: 'Уютное жильё' },
             { id: 'house_3', name: 'Дом', icon: '🏡', cost: 1200, desc: 'Свой дом' },
-            { id: 'house_4', name: 'Особняк', icon: '🏰', cost: 4000, desc: 'Роскошная жизнь' }
+            { id: 'house_4', name: 'Особняк', icon: '🏰', cost: 4000, desc: 'Роскошная жизнь' },
+            { id: 'house_5', name: 'Замок', icon: '🏰', cost: 12000, desc: 'Королевская роскошь' }
+        ],
+        electronics: [
+            { id: 'electronics_1', name: 'Телефон', icon: '📱', cost: 60, desc: 'Связь с миром' },
+            { id: 'electronics_2', name: 'Ноутбук', icon: '💻', cost: 250, desc: 'Работа и развлечения' },
+            { id: 'electronics_3', name: 'Игровой ПК', icon: '🖥️', cost: 800, desc: 'Для профессионалов' },
+            { id: 'electronics_4', name: 'Серверная стойка', icon: '📡', cost: 2500, desc: 'ИТ-магнат' }
         ]
     };
 
@@ -768,16 +793,84 @@
     }
 
     // ============================================================
+    //  АВТОМАТИЧЕСКОЕ ПОВЫШЕНИЕ РАБОТЫ
+    // ============================================================
+
+    function checkAutoPromotion() {
+        if (G.jobId >= jobs.length - 1) return; // уже на последней работе
+
+        const nextJobId = G.jobId + 1;
+        const nextJob = jobs[nextJobId];
+
+        if (!nextJob) return;
+
+        // Проверяем, доступна ли следующая работа
+        if (canAccessJob(nextJob)) {
+            // Проверяем, хватает ли денег
+            const cost = getFinalCost(nextJob.cost);
+            if (G.balance >= cost) {
+                // Автоматическое повышение!
+                G.balance -= cost;
+                G.jobId = nextJobId;
+                save();
+                updateUI();
+
+                // Показываем уведомление о повышении
+                const jobNames = {
+                    0: 'Безработного',
+                    1: 'Разносчика',
+                    2: 'Уборщика',
+                    3: 'Официанта',
+                    4: 'Курьера',
+                    5: 'Продавца',
+                    6: 'Водителя',
+                    7: 'Менеджера',
+                    8: 'Директора',
+                    9: 'Магната',
+                    10: 'Легенду',
+                    11: 'Икону',
+                    12: 'Миллиардера',
+                    13: 'Легенду мира'
+                };
+                const name = jobNames[nextJobId] || nextJob.name;
+                notify(`🎉 ПОВЫШЕНИЕ! Теперь ты ${nextJob.name}! Доход: +${nextJob.baseIncome}$/сек`, true);
+                launchConfetti();
+
+                // Проверяем, не доступна ли следующая работа после повышения
+                setTimeout(() => {
+                    checkAutoPromotion();
+                }, 500);
+            } else {
+                // Не хватает денег — уведомление о том, что нужно накопить
+                // Показываем только если работа ещё не доступна
+                const msg = `💰 Чтобы стать ${nextJob.name}, нужно ${cost}$. Накопить ещё ${cost - G.balance}$`;
+                // Не спамим уведомлениями — показываем в интерфейсе
+                const reqEl = document.querySelector('.job-card.active .req');
+                if (reqEl) {
+                    reqEl.textContent = `💰 Нужно ${cost}$ для повышения до ${nextJob.name}`;
+                }
+            }
+        }
+    }
+
+    // ============================================================
     //  ОПЫТ И УРОВНИ
     // ============================================================
 
     function addExp(amount) {
         G.exp += amount;
+        let leveledUp = false;
         while (G.exp >= getExpToNext()) {
             G.exp -= getExpToNext();
             G.level++;
             G.skillPoints++;
-            notify(`🎉 Уровень ${G.level}! +1 очко прокачки!`);
+            leveledUp = true;
+            notify(`🎉 УРОВЕНЬ ${G.level}! +1 очко прокачки!`, true);
+            launchConfetti();
+            // После повышения уровня проверяем доступность новых работ
+            setTimeout(() => {
+                checkAutoPromotion();
+            }, 300);
         }
         updateUI();
         save();
@@ -870,6 +963,7 @@
             const isCurrent = idx === G.jobId;
             const canAccess = canAccessJob(job);
             const isFirstJob = idx === 0;
+            const isNextJob = idx === G.jobId + 1;
 
             let canBuy = false;
             if (!isCurrent && idx !== 0) {
@@ -881,6 +975,16 @@
             let reqText = '';
             if (isCurrent) {
                 reqText = '✅ Текущая работа';
+                // Проверяем, доступно ли повышение
+                const nextJob = jobs[idx + 1];
+                if (nextJob && canAccessJob(nextJob)) {
+                    const cost = getFinalCost(nextJob.cost);
+                    if (G.balance >= cost) {
+                        reqText = `⭐ Готов к повышению до ${nextJob.name}! (${cost}$)`;
+                    } else {
+                        reqText = `💰 Нужно ${cost}$ для повышения до ${nextJob.name}`;
+                    }
+                }
             } else if (isFirstJob) {
                 reqText = '✅ Всегда доступна';
             } else if (!canAccess) {
@@ -889,7 +993,7 @@
                 const missingItems = job.reqItems.filter(id => !hasItem(id));
                 if (missingItems.length > 0) {
                     const names = missingItems.map(id => {
-                        for (const cat of ['clothes', 'cars', 'houses']) {
+                        for (const cat of ['clothes', 'cars', 'houses', 'electronics']) {
                             const found = shopItems[cat].find(i => i.id === id);
                             if (found) return found.name;
                         }
@@ -1017,6 +1121,9 @@
         save();
         updateUI();
         notify(`✅ Теперь ты ${job.name}!`);
+
+        // Проверяем, не доступно ли следующее повышение
+        setTimeout(() => checkAutoPromotion(), 500);
     }
 
     function buyItem(id, category) {
@@ -1031,32 +1138,20 @@
         save();
         updateUI();
 
-        // ============================================================
-        //  ⚡ ГЛАВНОЕ: ПРОВЕРЯЕМ ДОСТУПНЫЕ РАБОТЫ ПОСЛЕ ПОКУПКИ
-        // ============================================================
-        // Проверяем, не появилась ли новая доступная работа
-        let newJobAvailable = false;
-        let newJobName = '';
-        for (const job of jobs) {
-            if (job.id !== G.jobId && canAccessJob(job)) {
-                newJobAvailable = true;
-                newJobName = job.name;
-                break;
-            }
-        }
-
         notify(`✅ Куплено: ${item.name}!`);
 
-        if (newJobAvailable) {
-            setTimeout(() => {
-                notify(`🎉 Теперь доступна работа: ${newJobName}!`, true);
-                // Автоматически переключаем на новую работу?
-                // Не переключаем автоматически, чтобы игрок сам выбрал
-            }, 500);
-        }
-
-        renderJobs();
-        save();
+        // Проверяем доступные работы после покупки
+        setTimeout(() => {
+            // Проверяем, не появилась ли новая работа
+            for (const job of jobs) {
+                if (job.id > G.jobId && canAccessJob(job)) {
+                    notify(`🎉 Теперь доступна работа: ${job.name}!`, true);
+                    break;
+                }
+            }
+            // Проверяем автоматическое повышение
+            checkAutoPromotion();
+        }, 300);
     }
 
     function buySkill(id) {
@@ -1151,7 +1246,6 @@
             win = Math.max(win, 2);
         }
 
-        // Убираем x1 победы
         if (win > 0 && win < bet * 1.5) {
             win = 0;
         }
@@ -1172,6 +1266,9 @@
             setTimeout(() => reels.forEach(r => r.classList.remove('winner')), 1200);
             launchConfetti();
             notify(`🎉 Выигрыш ${win}$!`);
+
+            // Проверяем автоматическое повышение после выигрыша
+            setTimeout(() => checkAutoPromotion(), 500);
         } else {
             G.totalLosses++;
             document.getElementById('slotMessage').textContent = '😔 Проигрыш';
@@ -1245,6 +1342,10 @@
                 G.totalEarned += inc;
                 save();
                 updateUI();
+                // Проверяем автоматическое повышение каждые 5 секунд
+                if (G.balance % 50 < 5) {
+                    checkAutoPromotion();
+                }
             }
         }, 1000);
     }
@@ -1301,6 +1402,10 @@
         }
         updateUI();
         startIdle();
+
+        // Первая проверка автоматического повышения
+        setTimeout(() => checkAutoPromotion(), 1000);
+
         setInterval(save, 8000);
     });
 
