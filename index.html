@@ -23,7 +23,7 @@
             overflow-x: hidden;
         }
 
-        /* ===== ФОН С ЭФФЕКТОМ ===== */
+        /* ===== ФОН ===== */
         body::before {
             content: '';
             position: fixed;
@@ -39,7 +39,6 @@
             z-index: 0;
         }
 
-        /* Плавающие частицы фона */
         body::after {
             content: '';
             position: fixed;
@@ -322,6 +321,10 @@
             background: #eb5757;
             color: #fff;
         }
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: scale(1.03);
+        }
         .btn-sm {
             padding: 5px 14px;
             font-size: 12px;
@@ -329,6 +332,13 @@
         .btn-gold {
             background: #f5b342;
             color: #0b0e14;
+        }
+
+        .reset-section {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(38, 50, 63, 0.3);
+            text-align: center;
         }
 
         /* ===== МАГАЗИН ===== */
@@ -618,6 +628,11 @@
         <div style="text-align:center;font-size:12px;color:#7e96ab;margin-top:6px;">
             💡 Для новой работы нужны: уровень, деньги и вещи
         </div>
+        <div class="reset-section">
+            <button class="btn btn-danger" onclick="resetGame()" style="padding:10px 30px;font-size:14px;">
+                🔄 Начать игру с начала
+            </button>
+        </div>
     </div>
 
     <!-- МАГАЗИН -->
@@ -668,7 +683,6 @@
     //  ДАННЫЕ
     // ============================================================
 
-    // ПЕРВАЯ РАБОТА ДОСТУПНА СРАЗУ (reqLevel: 0, reqItems: [])
     const jobs = [
         { id: 0, name: 'Безработный', baseIncome: 0, cost: 0, reqLevel: 0, reqItems: [] },
         { id: 1, name: 'Разносчик', baseIncome: 1, cost: 20, reqLevel: 1, reqItems: ['clothes_1'] },
@@ -749,7 +763,6 @@
     }
 
     function getExpToNext() {
-        // 50 + уровень * 25, но первый уровень требует 75 опыта
         return 50 + G.level * 25;
     }
 
@@ -817,6 +830,38 @@
     }
 
     // ============================================================
+    //  СБРОС ИГРЫ
+    // ============================================================
+
+    function resetGame() {
+        if (!confirm('⚠️ ВЫ УВЕРЕНЫ? Весь прогресс будет потерян!')) return;
+
+        // Сбрасываем всё состояние
+        G.balance = 30;
+        G.totalEarned = 0;
+        G.jobId = 0;
+        G.exp = 0;
+        G.level = 1;
+        G.skillPoints = 0;
+        G.spins = 0;
+        G.totalWins = 0;
+        G.totalLosses = 0;
+        G.biggestWin = 0;
+        G.lastWin = 0;
+        G.bet = 2;
+        G.isSpinning = false;
+        G.history = [];
+        G.ownedItems = [];
+        G.skillLevels = { workSpeed: 0, slotLuck: 0, slotBonus: 0, saveMoney: 0 };
+
+        // Очищаем сохранение
+        localStorage.removeItem('idleLifeRPG');
+
+        updateUI();
+        notify('🔄 Игра перезапущена! С чистого листа!');
+    }
+
+    // ============================================================
     //  UI ОБНОВЛЕНИЕ
     // ============================================================
 
@@ -847,18 +892,27 @@
     function renderJobs() {
         const container = document.getElementById('jobList');
         let html = '';
+
         jobs.forEach((job, idx) => {
             const isCurrent = idx === G.jobId;
             const canAccess = canAccessJob(job);
-            // Для первой работы (безработный) всегда доступна
             const isFirstJob = idx === 0;
-            const canBuy = (canAccess || isFirstJob) && G.balance >= job.cost && !isCurrent && idx !== 0;
-            const locked = !canAccess && !isFirstJob && idx !== 0;
 
-            // Проверяем, что нужно для работы
+            // Проверяем, можно ли купить
+            let canBuy = false;
+            if (!isCurrent && idx !== 0) {
+                if (canAccess && G.balance >= getFinalCost(job.cost)) {
+                    canBuy = true;
+                }
+            }
+
+            // Текст требований
             let reqText = '';
-            if (idx === 0) reqText = '✅ Всегда доступна';
-            else if (locked) {
+            if (isCurrent) {
+                reqText = '✅ Текущая работа';
+            } else if (isFirstJob) {
+                reqText = '✅ Всегда доступна';
+            } else if (!canAccess) {
                 const parts = [];
                 if (G.level < job.reqLevel) parts.push(`ур. ${job.reqLevel}`);
                 const missingItems = job.reqItems.filter(id => !hasItem(id));
@@ -873,8 +927,6 @@
                     parts.push(names.join(', '));
                 }
                 reqText = '🔒 Требует: ' + parts.join(', ');
-            } else if (isCurrent) {
-                reqText = '✅ Текущая работа';
             } else {
                 reqText = '💰 Доступна';
             }
@@ -888,14 +940,15 @@
                     </div>
                     <div class="actions">
                         ${isCurrent ? `<span style="font-size:12px;color:#6fcf97;">✅</span>` :
-                         (canBuy || idx === 0) ? `<button class="btn btn-primary btn-sm" onclick="buyJob(${idx})" ${(canBuy || idx === 0) ? '' : 'disabled'}>
-                             ${idx === 0 ? 'Выбрать' : getFinalCost(job.cost) + '$'}
+                         (canBuy || isFirstJob) ? `<button class="btn btn-primary btn-sm" onclick="buyJob(${idx})">
+                             ${isFirstJob ? 'Выбрать' : getFinalCost(job.cost) + '$'}
                          </button>` :
                          `<span style="font-size:11px;color:#7e96ab;">🔒</span>`}
                     </div>
                 </div>
             `;
         });
+
         container.innerHTML = html;
     }
 
@@ -979,7 +1032,6 @@
     function buyJob(idx) {
         const job = jobs[idx];
         if (idx === 0) {
-            // Безработный — просто меняем работу
             G.jobId = 0;
             save();
             updateUI();
@@ -1104,17 +1156,16 @@
             win = Math.max(win, 2);
         }
 
-        // Если выигрыш меньше ставки — считаем что это проигрыш
-        // (убераем x1 победы: если win < bet * 1.5, то это не считается выигрышем)
+        // Убираем x1 победы: если выигрыш меньше ставки × 1.5 — считаем проигрышем
         if (win > 0 && win < bet * 1.5) {
-            win = 0; // Убираем мелкие победы
+            win = 0;
         }
 
         // Бонус от навыка
         const bonusLvl = G.skillLevels.slotBonus || 0;
         win = Math.floor(win * (1 + bonusLvl * 0.1));
 
-        // Умножаем на ставку (но не меньше 0)
+        // Умножаем на ставку
         win = Math.floor(win * (bet / 2));
 
         if (win > 0) {
@@ -1134,7 +1185,7 @@
             document.getElementById('slotMessage').textContent = '😔 Проигрыш';
         }
 
-        // Опыт за спин (даже если проиграл)
+        // Опыт за спин
         addExp(Math.floor(bet * 0.3) + 1);
 
         const display = results.join('');
