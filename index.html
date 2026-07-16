@@ -189,7 +189,6 @@
             </div>
         </div>
 
-        <!-- СЛОТЫ -->
         <div class="casino" id="gameSlots">
             <h1>🎰 SLOT MACHINE</h1>
             <div class="slot-machine">
@@ -236,7 +235,6 @@
             </div>
         </div>
 
-        <!-- РУЛЕТКА -->
         <div class="casino game-hidden" id="gameRoulette">
             <h1>🎡 РУЛЕТКА</h1>
             <div class="stats">
@@ -307,7 +305,6 @@
             </div>
         </div>
 
-        <!-- БЛЭКДЖЕК -->
         <div class="casino game-hidden" id="gameBJ">
             <h1>🃏 БЛЭКДЖЕК (21)</h1>
             <div class="stats">
@@ -330,7 +327,6 @@
             </div>
         </div>
 
-        <!-- АДМИН -->
         <div class="casino admin-panel" id="adminPanel">
             <h3>🔐 АДМИН-ПАНЕЛЬ</h3>
             <div class="admin-row">
@@ -535,6 +531,7 @@
                 }
             }).catch(function(err) {
                 alert('❌ Неверный email или пароль!');
+                console.error('Ошибка входа:', err);
             });
         }
         
@@ -555,6 +552,20 @@
         function loadUserData() {
             if (!currentUser) return Promise.reject('No user');
             return sb.from('users').select('*').eq('id', currentUser.id).single().then(function(result) {
+                if (result.error) {
+                    // Если пользователь не найден в таблице users, создаём его
+                    console.log('Пользователь не найден в таблице, создаём...');
+                    return sb.from('users').insert([{ 
+                        id: currentUser.id, 
+                        username: currentUser.user_metadata?.username || 'Player',
+                        email: currentUser.email, 
+                        balance: 1000
+                    }]).then(function() {
+                        return sb.from('users').select('*').eq('id', currentUser.id).single();
+                    });
+                }
+                return result;
+            }).then(function(result) {
                 if (result.error) throw result.error;
                 if (result.data) {
                     userBalance = result.data.balance || 1000;
