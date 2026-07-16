@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Idle Life</title>
+    <title>Idle Life RPG</title>
     <style>
         * {
             margin: 0;
@@ -12,44 +12,47 @@
         }
         body {
             min-height: 100vh;
-            background: #0b0e14;
+            background: #0a0e14;
             font-family: 'Segoe UI', Roboto, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 16px;
+            padding: 12px;
         }
         .app {
             max-width: 420px;
             width: 100%;
-            background: #151e27;
-            border-radius: 28px;
-            padding: 20px 18px 30px;
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
+            background: #131c26;
+            border-radius: 32px;
+            padding: 20px 16px 28px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
             color: #e8edf2;
             position: relative;
-            border: 1px solid #2a3846;
+            border: 1px solid #26323f;
         }
+
+        /* ===== АВАТАР ===== */
         .avatar-section {
             display: flex;
             align-items: center;
             gap: 14px;
-            background: #1b2631;
-            border-radius: 18px;
-            padding: 12px 16px;
-            margin-bottom: 18px;
+            background: #1a2632;
+            border-radius: 24px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
             border: 1px solid #2f4050;
         }
         .avatar {
-            font-size: 40px;
+            font-size: 44px;
             background: #263544;
-            width: 60px;
-            height: 60px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             border: 2px solid #f5b342;
+            flex-shrink: 0;
         }
         .avatar-info {
             flex: 1;
@@ -61,17 +64,24 @@
         }
         .avatar-info .title {
             font-size: 13px;
-            color: #a0b3c4;
+            color: #8aa3b8;
         }
+        .avatar-info .level {
+            font-size: 13px;
+            color: #f5b342;
+            font-weight: 600;
+        }
+
+        /* ===== СТАТИСТИКА ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 6px;
-            background: #1b2631;
-            border-radius: 16px;
+            background: #1a2632;
+            border-radius: 20px;
             padding: 12px 6px;
             margin-bottom: 16px;
-            border: 1px solid #2a3846;
+            border: 1px solid #26323f;
         }
         .stat-box {
             text-align: center;
@@ -90,14 +100,55 @@
         .stat-box .value.green {
             color: #6fcf97;
         }
+        .stat-box .value.blue {
+            color: #5b9bd5;
+        }
 
+        /* ===== ОПЫТ И УРОВЕНЬ ===== */
+        .exp-section {
+            background: #1a2632;
+            border-radius: 16px;
+            padding: 10px 16px;
+            margin-bottom: 16px;
+            border: 1px solid #26323f;
+        }
+        .exp-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+        .exp-row .exp-label {
+            color: #8aa3b8;
+        }
+        .exp-row .exp-value {
+            color: #f5b342;
+            font-weight: 600;
+        }
+        .exp-bar {
+            width: 100%;
+            height: 6px;
+            background: #263544;
+            border-radius: 4px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .exp-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f5b342, #f2994a);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        /* ===== ВКЛАДКИ ===== */
         .tab-bar {
             display: flex;
             gap: 4px;
-            background: #1b2631;
-            border-radius: 16px;
+            background: #1a2632;
+            border-radius: 18px;
             padding: 4px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
         .tab-btn {
             flex: 1;
@@ -127,32 +178,41 @@
             display: block;
         }
 
+        /* ===== РАБОТА ===== */
         .job-card {
-            background: #1b2631;
-            border-radius: 16px;
+            background: #1a2632;
+            border-radius: 18px;
             padding: 14px 16px;
-            margin-bottom: 12px;
-            border: 1px solid #2a3846;
+            margin-bottom: 10px;
+            border: 1px solid #26323f;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+        .job-card.active {
+            border-color: #f5b342;
+            background: #1f2d3d;
+        }
         .job-card .info .name {
             font-weight: 600;
-            font-size: 16px;
+            font-size: 15px;
         }
         .job-card .info .desc {
             font-size: 12px;
             color: #7e96ab;
         }
+        .job-card .info .req {
+            font-size: 11px;
+            color: #8aa3b8;
+        }
         .job-card .actions {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
         }
         .btn {
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 8px 18px;
             font-weight: 600;
             font-size: 13px;
@@ -178,37 +238,66 @@
             color: #fff;
         }
         .btn-sm {
-            padding: 5px 12px;
+            padding: 5px 14px;
             font-size: 12px;
         }
+        .btn-gold {
+            background: #f5b342;
+            color: #0b0e14;
+        }
 
+        /* ===== МАГАЗИН ===== */
+        .shop-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+        .shop-tab {
+            flex: 1;
+            background: #1a2632;
+            border: 1px solid #26323f;
+            border-radius: 12px;
+            padding: 8px 0;
+            color: #7e96ab;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+        .shop-tab.active {
+            background: #f5b342;
+            color: #0b0e14;
+            border-color: #f5b342;
+        }
         .shop-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
         .shop-item {
-            background: #1b2631;
+            background: #1a2632;
             border-radius: 16px;
-            padding: 14px 12px;
-            border: 1px solid #2a3846;
+            padding: 14px 10px;
+            border: 1px solid #26323f;
             text-align: center;
+            transition: 0.2s;
+        }
+        .shop-item.owned {
+            border-color: #6fcf97;
+            background: #1a2a24;
         }
         .shop-item .icon {
-            font-size: 32px;
+            font-size: 30px;
         }
         .shop-item .sname {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             margin: 4px 0 2px;
         }
         .shop-item .sdesc {
             font-size: 11px;
             color: #7e96ab;
-        }
-        .shop-item .slvl {
-            font-size: 12px;
-            color: #f5b342;
         }
         .shop-item .sprice {
             font-size: 13px;
@@ -216,75 +305,96 @@
             color: #6fcf97;
             margin: 6px 0 8px;
         }
+        .shop-item .owned-badge {
+            font-size: 11px;
+            color: #6fcf97;
+            font-weight: 600;
+        }
 
+        /* ===== СЛОТ ===== */
         .slot-machine {
             background: #0f1720;
-            border-radius: 18px;
-            padding: 20px 12px;
-            border: 1px solid #2a3846;
+            border-radius: 24px;
+            padding: 20px 14px;
+            border: 1px solid #26323f;
         }
         .reels {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            margin: 8px 0 14px;
+            gap: 14px;
+            margin: 6px 0 16px;
         }
         .reel {
             width: 80px;
             height: 96px;
-            background: #1b2631;
-            border-radius: 14px;
+            background: #1a2632;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 50px;
+            font-size: 48px;
             border: 2px solid #2f4050;
             transition: 0.15s;
         }
         .reel.spinning {
-            animation: spin 0.12s linear infinite;
+            animation: spin 0.1s linear infinite;
         }
         @keyframes spin {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.06); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.06) rotate(2deg); }
+            100% { transform: scale(1) rotate(0deg); }
         }
         .reel.winner {
             border-color: #f5b342;
-            box-shadow: 0 0 24px rgba(245, 179, 66, 0.4);
+            box-shadow: 0 0 30px rgba(245, 179, 66, 0.4);
         }
         .slot-controls {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
+        }
+        .slot-controls .bet-input {
+            background: #0f1720;
+            border: 1px solid #2f4050;
+            border-radius: 12px;
+            padding: 6px 12px;
+            color: #e8edf2;
+            font-size: 16px;
+            font-weight: 600;
+            width: 80px;
+            text-align: center;
+            outline: none;
+        }
+        .slot-controls .bet-input:focus {
+            border-color: #f5b342;
         }
         .slot-controls .bet-label {
             font-size: 14px;
-            color: #a0b3c4;
+            color: #8aa3b8;
         }
         .slot-message {
             text-align: center;
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
             color: #f5b342;
             margin-top: 12px;
-            min-height: 24px;
+            min-height: 28px;
         }
 
         .history-box {
             background: #0f1720;
             border-radius: 14px;
-            padding: 12px 14px;
-            margin-top: 16px;
+            padding: 10px 14px;
+            margin-top: 14px;
             font-size: 12px;
             color: #7e96ab;
-            max-height: 56px;
+            max-height: 48px;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            border: 1px solid #1f2e3c;
+            border: 1px solid #1a2632;
         }
 
         .confetti-container {
@@ -314,7 +424,7 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #1b2631;
+            background: #1a2632;
             border: 1px solid #f5b342;
             color: #e8edf2;
             padding: 10px 24px;
@@ -333,6 +443,7 @@
         @media (max-width: 440px) {
             .reel { width: 64px; height: 78px; font-size: 38px; }
             .shop-grid { grid-template-columns: 1fr 1fr; }
+            .slot-controls .bet-input { width: 60px; font-size: 14px; }
         }
     </style>
 </head>
@@ -342,45 +453,67 @@
 
     <!-- АВАТАР -->
     <div class="avatar-section">
-        <div class="avatar">🧑‍💼</div>
+        <div class="avatar" id="avatarEmoji">🧑‍💼</div>
         <div class="avatar-info">
             <div class="name" id="playerName">Новичок</div>
             <div class="title" id="playerTitle">Безработный</div>
+            <div class="level">🎯 Уровень <span id="levelDisplay">1</span></div>
         </div>
-        <div style="font-size:13px; color:#7e96ab;" id="levelDisplay">Ур. 1</div>
+        <div style="font-size:13px; color:#7e96ab;">
+            🎯 <span id="skillPointsDisplay">0</span>
+        </div>
     </div>
 
     <!-- СТАТИСТИКА -->
     <div class="stats-grid">
         <div class="stat-box">
             <div class="label">💰 Баланс</div>
-            <div class="value" id="balanceDisplay">50</div>
+            <div class="value" id="balanceDisplay">30</div>
         </div>
         <div class="stat-box">
             <div class="label">📈 Доход/сек</div>
             <div class="value green" id="incomeDisplay">0</div>
         </div>
         <div class="stat-box">
-            <div class="label">🎯 Спинов</div>
-            <div class="value" id="spinCountDisplay">0</div>
+            <div class="label">🎰 Спинов</div>
+            <div class="value blue" id="spinCountDisplay">0</div>
+        </div>
+    </div>
+
+    <!-- ОПЫТ -->
+    <div class="exp-section">
+        <div class="exp-row">
+            <span class="exp-label">⭐ Опыт</span>
+            <span class="exp-value" id="expDisplay">0 / 100</span>
+        </div>
+        <div class="exp-bar">
+            <div class="fill" id="expBar" style="width:0%;"></div>
         </div>
     </div>
 
     <!-- ВКЛАДКИ -->
     <div class="tab-bar">
         <button class="tab-btn active" data-tab="work">💼 Работа</button>
-        <button class="tab-btn" data-tab="shop">🛒 Улучшения</button>
+        <button class="tab-btn" data-tab="shop">🛒 Магазин</button>
         <button class="tab-btn" data-tab="slot">🎰 Слот</button>
+        <button class="tab-btn" data-tab="skills">⚡ Навыки</button>
     </div>
 
     <!-- РАБОТА -->
     <div class="tab-content active" id="tab-work">
         <div id="jobList"></div>
-        <button class="btn btn-success" style="width:100%; margin-top:6px;" onclick="work()">💪 Работать сейчас</button>
+        <div style="text-align:center;font-size:12px;color:#7e96ab;margin-top:6px;">
+            💡 Для новой работы нужны: уровень, деньги и статус
+        </div>
     </div>
 
     <!-- МАГАЗИН -->
     <div class="tab-content" id="tab-shop">
+        <div class="shop-tabs">
+            <button class="shop-tab active" data-shop="cars">🚗 Авто</button>
+            <button class="shop-tab" data-shop="houses">🏠 Жильё</button>
+            <button class="shop-tab" data-shop="clothes">👔 Одежда</button>
+        </div>
         <div class="shop-grid" id="shopGrid"></div>
     </div>
 
@@ -393,14 +526,24 @@
                 <div class="reel" id="reel3">🍒</div>
             </div>
             <div class="slot-controls">
-                <button class="btn btn-sm" id="betDown">−</button>
-                <span class="bet-label">Ставка: <strong id="betDisplay">2</strong>$</span>
-                <button class="btn btn-sm" id="betUp">+</button>
+                <span class="bet-label">Ставка:</span>
+                <input type="number" class="bet-input" id="betInput" value="2" min="1" step="1">
                 <button class="btn btn-primary" id="spinBtn">🎲 SPIN</button>
             </div>
             <div class="slot-message" id="slotMessage">Крути и выигрывай!</div>
+            <div style="text-align:center;font-size:11px;color:#5b6f82;margin-top:6px;">
+                ⭐ За каждый спин даётся опыт
+            </div>
         </div>
         <div class="history-box" id="historyBox">📜 История: пока пусто</div>
+    </div>
+
+    <!-- НАВЫКИ -->
+    <div class="tab-content" id="tab-skills">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;" id="skillsGrid"></div>
+        <div style="text-align:center;font-size:12px;color:#7e96ab;margin-top:10px;">
+            🎯 Очки прокачки: <span id="skillPointsDisplay2">0</span>
+        </div>
     </div>
 
 </div>
@@ -413,39 +556,63 @@
     // ============================================================
 
     const jobs = [
-        { id: 0, name: 'Безработный', baseIncome: 0, cost: 0 },
-        { id: 1, name: 'Разносчик', baseIncome: 1, cost: 30 },
-        { id: 2, name: 'Уборщик', baseIncome: 2, cost: 80 },
-        { id: 3, name: 'Официант', baseIncome: 4, cost: 200 },
-        { id: 4, name: 'Курьер', baseIncome: 7, cost: 450 },
-        { id: 5, name: 'Продавец', baseIncome: 12, cost: 900 },
-        { id: 6, name: 'Водитель', baseIncome: 20, cost: 1800 },
-        { id: 7, name: 'Менеджер', baseIncome: 35, cost: 3800 },
-        { id: 8, name: 'Директор', baseIncome: 60, cost: 7500 },
-        { id: 9, name: 'Магнат', baseIncome: 110, cost: 16000 },
-        { id: 10, name: 'Легенда', baseIncome: 220, cost: 35000 }
+        { id: 0, name: 'Безработный', baseIncome: 0, cost: 0, reqLevel: 0, reqItems: [] },
+        { id: 1, name: 'Разносчик', baseIncome: 1, cost: 25, reqLevel: 1, reqItems: ['clothes_1'] },
+        { id: 2, name: 'Уборщик', baseIncome: 2, cost: 60, reqLevel: 2, reqItems: ['clothes_1', 'clothes_2'] },
+        { id: 3, name: 'Официант', baseIncome: 4, cost: 140, reqLevel: 3, reqItems: ['clothes_2', 'clothes_3'] },
+        { id: 4, name: 'Курьер', baseIncome: 7, cost: 300, reqLevel: 4, reqItems: ['clothes_3', 'car_1'] },
+        { id: 5, name: 'Продавец', baseIncome: 12, cost: 600, reqLevel: 5, reqItems: ['clothes_3', 'car_1', 'house_1'] },
+        { id: 6, name: 'Водитель', baseIncome: 20, cost: 1200, reqLevel: 6, reqItems: ['clothes_4', 'car_2'] },
+        { id: 7, name: 'Менеджер', baseIncome: 35, cost: 2500, reqLevel: 7, reqItems: ['clothes_4', 'car_2', 'house_2'] },
+        { id: 8, name: 'Директор', baseIncome: 60, cost: 5000, reqLevel: 8, reqItems: ['clothes_5', 'car_3', 'house_2'] },
+        { id: 9, name: 'Магнат', baseIncome: 110, cost: 12000, reqLevel: 9, reqItems: ['clothes_5', 'car_3', 'house_3'] },
+        { id: 10, name: 'Легенда', baseIncome: 220, cost: 30000, reqLevel: 10, reqItems: ['clothes_6', 'car_4', 'house_3'] }
     ];
 
-    const upgrades = [
-        { id: 'incomeMult', name: '💼 Зарплата +', icon: '📈', desc: '+15% доход', baseCost: 20, costMult: 1.5, maxLvl: 30 },
-        { id: 'slotBonus', name: '🎰 Бонус слота', icon: '🎯', desc: '+8% выигрыш', baseCost: 25, costMult: 1.6, maxLvl: 25 },
-        { id: 'luck', name: '🍀 Удача', icon: '🍀', desc: '+3% шанс', baseCost: 30, costMult: 1.7, maxLvl: 20 }
+    const shopItems = {
+        clothes: [
+            { id: 'clothes_1', name: 'Футболка', icon: '👕', cost: 15, desc: 'Базовая одежда' },
+            { id: 'clothes_2', name: 'Рубашка', icon: '👔', cost: 40, desc: 'Опрятный вид' },
+            { id: 'clothes_3', name: 'Костюм', icon: '🤵', cost: 120, desc: 'Деловой стиль' },
+            { id: 'clothes_4', name: 'Дорогой костюм', icon: '👔', cost: 350, desc: 'Статусный вид' },
+            { id: 'clothes_5', name: 'Брендовый костюм', icon: '👔', cost: 900, desc: 'Премиум класс' },
+            { id: 'clothes_6', name: 'Элитный костюм', icon: '👔', cost: 2500, desc: 'Высший свет' }
+        ],
+        cars: [
+            { id: 'car_1', name: 'Велосипед', icon: '🚲', cost: 50, desc: 'Быстрее пешком' },
+            { id: 'car_2', name: 'Б/у авто', icon: '🚗', cost: 200, desc: 'Средство передвижения' },
+            { id: 'car_3', name: 'Новое авто', icon: '🚗', cost: 700, desc: 'Комфорт и стиль' },
+            { id: 'car_4', name: 'Спорткар', icon: '🏎️', cost: 2000, desc: 'Для настоящих магнатов' }
+        ],
+        houses: [
+            { id: 'house_1', name: 'Комната', icon: '🏠', cost: 80, desc: 'Свой угол' },
+            { id: 'house_2', name: 'Квартира', icon: '🏢', cost: 350, desc: 'Уютное жильё' },
+            { id: 'house_3', name: 'Дом', icon: '🏡', cost: 1200, desc: 'Свой дом' },
+            { id: 'house_4', name: 'Особняк', icon: '🏰', cost: 4000, desc: 'Роскошная жизнь' }
+        ]
+    };
+
+    const skills = [
+        { id: 'workSpeed', name: '💼 Скорость работы', desc: '+10% доход', baseCost: 20, costMult: 1.5, maxLvl: 20 },
+        { id: 'slotLuck', name: '🍀 Удача в слоте', desc: '+5% шанс', baseCost: 25, costMult: 1.6, maxLvl: 15 },
+        { id: 'slotBonus', name: '🎰 Бонус слота', desc: '+10% выигрыш', baseCost: 30, costMult: 1.7, maxLvl: 15 },
+        { id: 'saveMoney', name: '💰 Экономия', desc: '-5% цена покупок', baseCost: 15, costMult: 1.4, maxLvl: 10 }
     ];
 
     const symbols = ['🍒', '🍋', '🍊', '🍇', '💎', '7️⃣', '⭐', '🎰'];
-    const winMap = { '🍒': 4, '🍋': 6, '🍊': 8, '🍇': 12, '💎': 25, '7️⃣': 50, '⭐': 35, '🎰': 80 };
+    const winMap = { '🍒': 3, '🍋': 5, '🍊': 7, '🍇': 10, '💎': 20, '7️⃣': 40, '⭐': 28, '🎰': 65 };
 
     // ============================================================
     //  СОСТОЯНИЕ
     // ============================================================
 
     let G = {
-        balance: 50,
+        balance: 30,
         totalEarned: 0,
         jobId: 0,
-        incomeMult: 1,
-        slotBonus: 0,
-        luck: 0,
+        exp: 0,
+        level: 1,
+        skillPoints: 0,
         spins: 0,
         totalWins: 0,
         totalLosses: 0,
@@ -453,65 +620,83 @@
         lastWin: 0,
         bet: 2,
         isSpinning: false,
-        history: []
+        history: [],
+        ownedItems: [],
+        skillLevels: { workSpeed: 0, slotLuck: 0, slotBonus: 0, saveMoney: 0 }
     };
 
-    // Уровни улучшений
-    let upgradeLevels = { incomeMult: 0, slotBonus: 0, luck: 0 };
+    function getJob() { return jobs[G.jobId] || jobs[0]; }
+
+    function getIncome() {
+        const base = getJob().baseIncome;
+        const speedLvl = G.skillLevels.workSpeed || 0;
+        const mult = 1 + speedLvl * 0.1;
+        return Math.floor(base * mult);
+    }
+
+    function getExpToNext() { return 50 + G.level * 25; }
+
+    function getDiscount() {
+        const lvl = G.skillLevels.saveMoney || 0;
+        return Math.min(lvl * 0.05, 0.4);
+    }
+
+    function getFinalCost(cost) {
+        const discount = getDiscount();
+        return Math.max(1, Math.floor(cost * (1 - discount)));
+    }
+
+    function getSkillCost(id) {
+        const s = skills.find(sk => sk.id === id);
+        const lvl = G.skillLevels[id] || 0;
+        return Math.floor(s.baseCost * Math.pow(s.costMult, lvl));
+    }
+
+    function hasItem(id) { return G.ownedItems.includes(id); }
+
+    function canAccessJob(job) {
+        if (G.level < job.reqLevel) return false;
+        for (const req of job.reqItems) {
+            if (!hasItem(req)) return false;
+        }
+        return true;
+    }
+
+    // ============================================================
+    //  ОПЫТ И УРОВНИ
+    // ============================================================
+
+    function addExp(amount) {
+        G.exp += amount;
+        while (G.exp >= getExpToNext()) {
+            G.exp -= getExpToNext();
+            G.level++;
+            G.skillPoints++;
+            notify(`🎉 Уровень ${G.level}! +1 очко прокачки!`);
+        }
+        updateUI();
+        save();
+    }
 
     // ============================================================
     //  СОХРАНЕНИЕ
     // ============================================================
 
     function save() {
-        const data = { ...G, upgradeLevels };
-        localStorage.setItem('idleLifeSave', JSON.stringify(data));
+        const data = { ...G, skillLevels: G.skillLevels, ownedItems: G.ownedItems };
+        localStorage.setItem('idleLifeRPG', JSON.stringify(data));
     }
 
     function load() {
         try {
-            const raw = localStorage.getItem('idleLifeSave');
+            const raw = localStorage.getItem('idleLifeRPG');
             if (!raw) return false;
             const data = JSON.parse(raw);
             Object.assign(G, data);
-            if (data.upgradeLevels) upgradeLevels = data.upgradeLevels;
+            if (data.skillLevels) G.skillLevels = data.skillLevels;
+            if (data.ownedItems) G.ownedItems = data.ownedItems;
             return true;
         } catch { return false; }
-    }
-
-    // ============================================================
-    //  ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-    // ============================================================
-
-    function getJob() { return jobs[G.jobId] || jobs[0]; }
-
-    function getIncome() {
-        const base = getJob().baseIncome;
-        const mult = G.incomeMult || 1;
-        const bonus = 1 + (G.slotBonus || 0) * 0.08;
-        return Math.floor(base * mult * bonus);
-    }
-
-    function getUpgradeCost(id) {
-        const up = upgrades.find(u => u.id === id);
-        const lvl = upgradeLevels[id] || 0;
-        return Math.floor(up.baseCost * Math.pow(up.costMult, lvl));
-    }
-
-    function getMaxLvl(id) {
-        const up = upgrades.find(u => u.id === id);
-        return up.maxLvl;
-    }
-
-    function notify(text, isGood = true) {
-        const old = document.querySelector('.toast');
-        if (old) old.remove();
-        const el = document.createElement('div');
-        el.className = 'toast';
-        el.textContent = text;
-        if (!isGood) el.style.borderColor = '#eb5757';
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 2400);
     }
 
     // ============================================================
@@ -522,14 +707,22 @@
         const job = getJob();
         document.getElementById('playerName').textContent = job.name;
         document.getElementById('playerTitle').textContent = job.id === 0 ? 'Начинающий' : 'Работник';
-        document.getElementById('levelDisplay').textContent = `Ур. ${job.id + 1}`;
+        document.getElementById('levelDisplay').textContent = G.level;
         document.getElementById('balanceDisplay').textContent = Math.floor(G.balance);
         document.getElementById('incomeDisplay').textContent = getIncome();
         document.getElementById('spinCountDisplay').textContent = G.spins;
-        document.getElementById('betDisplay').textContent = G.bet;
+        document.getElementById('skillPointsDisplay').textContent = G.skillPoints;
+        document.getElementById('skillPointsDisplay2').textContent = G.skillPoints;
+
+        const expNeed = getExpToNext();
+        document.getElementById('expDisplay').textContent = `${Math.floor(G.exp)} / ${expNeed}`;
+        document.getElementById('expBar').style.width = `${(G.exp / expNeed) * 100}%`;
+
+        document.getElementById('betInput').value = G.bet;
 
         renderJobs();
-        renderShop();
+        renderShop('cars');
+        renderSkills();
         renderHistory();
         updateSlotButton();
     }
@@ -539,19 +732,21 @@
         let html = '';
         jobs.forEach((job, idx) => {
             const isCurrent = idx === G.jobId;
-            const isUnlocked = idx <= G.jobId + 1;
-            const canBuy = isUnlocked && G.balance >= job.cost && !isCurrent;
+            const canAccess = canAccessJob(job);
+            const canBuy = canAccess && G.balance >= job.cost && !isCurrent;
+            const locked = !canAccess;
 
             html += `
-                <div class="job-card" style="${isCurrent ? 'border-color:#f5b342;' : ''}">
+                <div class="job-card ${isCurrent ? 'active' : ''}">
                     <div class="info">
                         <div class="name">${job.name} ${isCurrent ? '⭐' : ''}</div>
                         <div class="desc">💰 ${job.baseIncome}$/сек</div>
+                        <div class="req">${locked ? '🔒 Требует: ур.' + job.reqLevel + ' и вещи' : '✅ Доступна'}</div>
                     </div>
                     <div class="actions">
-                        ${isCurrent ? `<span style="font-size:12px;color:#6fcf97;">✅ Активна</span>` :
-                         isUnlocked ? `<button class="btn btn-primary btn-sm" onclick="buyJob(${idx})" ${canBuy ? '' : 'disabled'}>${job.cost}$</button>` :
-                         `<span style="font-size:11px;color:#7e96ab;">🔒</span>`}
+                        ${isCurrent ? `<span style="font-size:12px;color:#6fcf97;">✅</span>` :
+                         canBuy ? `<button class="btn btn-primary btn-sm" onclick="buyJob(${idx})">${getFinalCost(job.cost)}$</button>` :
+                         `<span style="font-size:11px;color:#7e96ab;">${locked ? '🔒' : '💰'}</span>`}
                     </div>
                 </div>
             `;
@@ -559,31 +754,58 @@
         container.innerHTML = html;
     }
 
-    function renderShop() {
+    function renderShop(category) {
         const container = document.getElementById('shopGrid');
+        const items = shopItems[category] || [];
         let html = '';
-        upgrades.forEach(up => {
-            const lvl = upgradeLevels[up.id] || 0;
-            const maxed = lvl >= up.maxLvl;
-            const cost = getUpgradeCost(up.id);
-            const canBuy = G.balance >= cost && !maxed;
-
-            let bonus = '';
-            if (up.id === 'incomeMult') bonus = `+${lvl * 15}% доход`;
-            else if (up.id === 'slotBonus') bonus = `+${lvl * 8}% выигрыш`;
-            else if (up.id === 'luck') bonus = `+${lvl * 3}% удача`;
+        items.forEach(item => {
+            const owned = hasItem(item.id);
+            const cost = getFinalCost(item.cost);
+            const canBuy = !owned && G.balance >= cost;
 
             html += `
-                <div class="shop-item">
-                    <div class="icon">${up.icon}</div>
-                    <div class="sname">${up.name}</div>
-                    <div class="sdesc">${up.desc}</div>
-                    <div class="slvl">${maxed ? '✅ MAX' : `Ур. ${lvl}/${up.maxLvl}`}</div>
-                    <div class="sprice">${maxed ? '—' : cost + '$'}</div>
-                    <button class="btn btn-primary btn-sm" onclick="buyUpgrade('${up.id}')" ${canBuy ? '' : 'disabled'}>
-                        ${maxed ? 'Готово' : 'Купить'}
+                <div class="shop-item ${owned ? 'owned' : ''}">
+                    <div class="icon">${item.icon}</div>
+                    <div class="sname">${item.name}</div>
+                    <div class="sdesc">${item.desc}</div>
+                    ${owned ? `<div class="owned-badge">✅ Владелец</div>` :
+                             `<div class="sprice">${cost}$</div>`}
+                    <button class="btn btn-sm ${owned ? 'btn-success' : 'btn-primary'}" 
+                            onclick="buyItem('${item.id}', '${category}')" 
+                            ${canBuy || owned ? '' : 'disabled'}>
+                        ${owned ? 'Владею' : 'Купить'}
                     </button>
-                    <div style="font-size:11px;color:#6fcf97;margin-top:4px;">${bonus}</div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    function renderSkills() {
+        const container = document.getElementById('skillsGrid');
+        let html = '';
+        skills.forEach(sk => {
+            const lvl = G.skillLevels[sk.id] || 0;
+            const maxed = lvl >= sk.maxLvl;
+            const cost = getSkillCost(sk.id);
+            const canBuy = G.skillPoints > 0 && !maxed;
+
+            let bonus = '';
+            if (sk.id === 'workSpeed') bonus = `+${lvl * 10}% доход`;
+            else if (sk.id === 'slotLuck') bonus = `+${lvl * 5}% шанс`;
+            else if (sk.id === 'slotBonus') bonus = `+${lvl * 10}% выигрыш`;
+            else if (sk.id === 'saveMoney') bonus = `-${Math.min(lvl * 5, 40)}% цена`;
+
+            html += `
+                <div class="shop-item" style="${maxed ? 'border-color:#6fcf97;' : ''}">
+                    <div class="sname">${sk.name}</div>
+                    <div class="sdesc">${sk.desc}</div>
+                    <div class="slvl">Ур. ${lvl}/${sk.maxLvl}</div>
+                    <div style="font-size:12px;color:#6fcf97;">${bonus}</div>
+                    <div class="sprice">${maxed ? '✅ MAX' : cost + ' очков'}</div>
+                    <button class="btn btn-primary btn-sm" onclick="buySkill('${sk.id}')" ${canBuy ? '' : 'disabled'}>
+                        ${maxed ? 'Готово' : '⬆ Прокачать'}
+                    </button>
                 </div>
             `;
         });
@@ -606,17 +828,48 @@
     }
 
     // ============================================================
-    //  РАБОТА
+    //  ДЕЙСТВИЯ
     // ============================================================
 
     function buyJob(idx) {
         const job = jobs[idx];
-        if (G.balance < job.cost) { notify('❌ Не хватает денег!', false); return; }
-        G.balance -= job.cost;
+        const cost = getFinalCost(job.cost);
+        if (G.balance < cost) { notify('❌ Не хватает денег!', false); return; }
+        if (!canAccessJob(job)) { notify('❌ Нужен уровень и вещи!', false); return; }
+        G.balance -= cost;
         G.jobId = idx;
         save();
         updateUI();
         notify(`✅ Теперь ты ${job.name}!`);
+    }
+
+    function buyItem(id, category) {
+        const items = shopItems[category] || [];
+        const item = items.find(i => i.id === id);
+        if (!item) return;
+        if (hasItem(id)) { notify('⚠️ У тебя уже есть это', false); return; }
+        const cost = getFinalCost(item.cost);
+        if (G.balance < cost) { notify('❌ Не хватает денег!', false); return; }
+        G.balance -= cost;
+        G.ownedItems.push(id);
+        save();
+        updateUI();
+        notify(`✅ Куплено: ${item.name}!`);
+    }
+
+    function buySkill(id) {
+        const sk = skills.find(s => s.id === id);
+        const lvl = G.skillLevels[id] || 0;
+        if (lvl >= sk.maxLvl) { notify('⚠️ Максимальный уровень!', false); return; }
+        if (G.skillPoints <= 0) { notify('❌ Нет очков прокачки!', false); return; }
+        const cost = getSkillCost(id);
+        if (G.skillPoints < cost) { notify('❌ Не хватает очков!', false); return; }
+
+        G.skillPoints -= cost;
+        G.skillLevels[id] = (G.skillLevels[id] || 0) + 1;
+        save();
+        updateUI();
+        notify(`✅ ${sk.name} улучшен до ${G.skillLevels[id]} уровня!`);
     }
 
     function work() {
@@ -624,36 +877,9 @@
         if (inc === 0) { notify('💤 У тебя нет работы!', false); return; }
         G.balance += inc;
         G.totalEarned += inc;
+        addExp(inc * 0.5);
         save();
         updateUI();
-        // маленькая анимация баланса
-        const el = document.getElementById('balanceDisplay');
-        el.style.color = '#6fcf97';
-        setTimeout(() => el.style.color = '', 300);
-    }
-
-    // ============================================================
-    //  МАГАЗИН
-    // ============================================================
-
-    function buyUpgrade(id) {
-        const up = upgrades.find(u => u.id === id);
-        const lvl = upgradeLevels[id] || 0;
-        if (lvl >= up.maxLvl) { notify('⚠️ Максимальный уровень!', false); return; }
-        const cost = getUpgradeCost(id);
-        if (G.balance < cost) { notify('❌ Не хватает денег!', false); return; }
-
-        G.balance -= cost;
-        upgradeLevels[id] = (upgradeLevels[id] || 0) + 1;
-
-        // Применяем эффект
-        if (id === 'incomeMult') G.incomeMult = 1 + upgradeLevels.incomeMult * 0.15;
-        else if (id === 'slotBonus') G.slotBonus = upgradeLevels.slotBonus;
-        else if (id === 'luck') G.luck = upgradeLevels.luck;
-
-        save();
-        updateUI();
-        notify(`✅ ${up.name} улучшен до ${upgradeLevels[id]} уровня!`);
     }
 
     // ============================================================
@@ -661,10 +887,9 @@
     // ============================================================
 
     function getWeightedSymbol() {
-        const weights = { '🍒': 24, '🍋': 20, '🍊': 18, '🍇': 14, '💎': 10, '⭐': 8, '7️⃣': 4, '🎰': 2 };
-        // Удача: увеличиваем шанс редких
-        const luckBonus = G.luck || 0;
-        if (Math.random() * 100 < luckBonus * 3) {
+        const weights = { '🍒': 22, '🍋': 18, '🍊': 16, '🍇': 14, '💎': 10, '⭐': 8, '7️⃣': 5, '🎰': 3 };
+        const luckLvl = G.skillLevels.slotLuck || 0;
+        if (Math.random() * 100 < luckLvl * 5) {
             const rare = ['💎', '7️⃣', '⭐', '🎰'];
             return rare[Math.floor(Math.random() * rare.length)];
         }
@@ -679,16 +904,16 @@
 
     function spin() {
         if (G.isSpinning) return;
-        if (G.balance < G.bet) {
-            document.getElementById('slotMessage').textContent = '❌ Не хватает денег!';
-            return;
-        }
+        const bet = parseInt(document.getElementById('betInput').value) || 1;
+        if (bet < 1) { notify('⚠️ Ставка не может быть меньше 1', false); return; }
+        if (G.balance < bet) { notify('❌ Не хватает денег!', false); return; }
 
+        G.bet = bet;
         G.isSpinning = true;
         document.getElementById('spinBtn').disabled = true;
         document.getElementById('slotMessage').textContent = '🎰 Крутим...';
 
-        G.balance -= G.bet;
+        G.balance -= bet;
         G.spins++;
 
         const reels = [
@@ -710,35 +935,33 @@
                 reels[idx].classList.remove('spinning');
 
                 if (results.length === 3) {
-                    finishSpin(results, reels);
+                    finishSpin(results, reels, bet);
                 }
             }, delay);
         });
     }
 
-    function finishSpin(results, reels) {
+    function finishSpin(results, reels, bet) {
         let win = 0;
 
-        // Три одинаковых
         if (results[0] === results[1] && results[1] === results[2]) {
             win = winMap[results[0]] || 0;
         }
-        // Спецкомбинации
         if (results.includes('7️⃣') && results.includes('💎') && results.includes('⭐')) {
-            win = Math.max(win, 40);
+            win = Math.max(win, 35);
         }
         if (results.filter(s => s === '🎰').length === 2) {
-            win = Math.max(win, 25);
+            win = Math.max(win, 20);
         }
-        // Два одинаковых (малый бонус)
         if (results[0] === results[1] && results[0] !== results[2]) win = Math.max(win, 2);
         if (results[1] === results[2] && results[1] !== results[0]) win = Math.max(win, 2);
 
-        // Бонус от улучшения слота
-        win = Math.floor(win * (1 + G.slotBonus * 0.08));
+        // Бонус от навыка
+        const bonusLvl = G.skillLevels.slotBonus || 0;
+        win = Math.floor(win * (1 + bonusLvl * 0.1));
 
-        // Минимальная ставка 2, умножаем на ставку
-        win = Math.floor(win * (G.bet / 2));
+        // Умножаем на ставку
+        win = Math.floor(win * (bet / 2));
 
         if (win > 0) {
             G.balance += win;
@@ -757,6 +980,9 @@
             document.getElementById('slotMessage').textContent = '😔 Попробуй ещё!';
         }
 
+        // Опыт за спин (даже если проиграл)
+        addExp(bet * 0.3 + 1);
+
         G.history.push(`${results.join('')} ${win > 0 ? '+' + win : '—'}`);
         if (G.history.length > 30) G.history.shift();
 
@@ -768,16 +994,6 @@
             document.getElementById('slotMessage').textContent = '💸 Банкрот! Работай!';
             document.getElementById('spinBtn').disabled = true;
         }
-    }
-
-    function changeBet(delta) {
-        if (G.isSpinning) return;
-        let newBet = G.bet + delta;
-        if (newBet < 1) newBet = 1;
-        if (newBet > G.balance) newBet = G.balance;
-        if (newBet > 200) newBet = 200;
-        G.bet = newBet;
-        document.getElementById('betDisplay').textContent = G.bet;
     }
 
     // ============================================================
@@ -800,6 +1016,21 @@
             container.appendChild(el);
             setTimeout(() => el.remove(), 3500);
         }
+    }
+
+    // ============================================================
+    //  УВЕДОМЛЕНИЯ
+    // ============================================================
+
+    function notify(text, isGood = true) {
+        const old = document.querySelector('.toast');
+        if (old) old.remove();
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.textContent = text;
+        if (!isGood) el.style.borderColor = '#eb5757';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2400);
     }
 
     // ============================================================
@@ -834,16 +1065,30 @@
         });
     });
 
-    document.getElementById('spinBtn').addEventListener('click', spin);
-    document.getElementById('betUp').addEventListener('click', () => changeBet(1));
-    document.getElementById('betDown').addEventListener('click', () => changeBet(-1));
+    document.querySelectorAll('.shop-tab').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.shop-tab').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            renderShop(this.dataset.shop);
+        });
+    });
 
-    // Клавиши
+    document.getElementById('spinBtn').addEventListener('click', spin);
+
+    document.getElementById('betInput').addEventListener('change', function() {
+        let val = parseInt(this.value) || 1;
+        if (val < 1) val = 1;
+        if (val > 9999) val = 9999;
+        G.bet = val;
+        this.value = val;
+        save();
+    });
+
     document.addEventListener('keydown', (e) => {
         if (e.code === 'Space') { e.preventDefault(); spin(); }
-        if (e.code === 'ArrowUp') { e.preventDefault(); changeBet(1); }
-        if (e.code === 'ArrowDown') { e.preventDefault(); changeBet(-1); }
-        if (e.key === 'w' || e.key === 'W') { work(); }
+        if (e.key === 'Enter' && document.activeElement === document.getElementById('betInput')) {
+            spin();
+        }
     });
 
     // ============================================================
@@ -855,12 +1100,10 @@
         if (loaded) {
             notify('💾 Прогресс загружен!');
         } else {
-            notify('👋 Добро пожаловать в Idle Life!');
+            notify('👋 Добро пожаловать в Idle Life RPG!');
         }
         updateUI();
         startIdle();
-
-        // Автосохранение
         setInterval(save, 8000);
     });
 
